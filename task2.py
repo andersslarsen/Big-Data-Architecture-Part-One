@@ -187,8 +187,8 @@ def pearsonCC(List1, List2):
 #between the number of upvotes and downvotes cast by a user.
 ###############################################################
 users = sc.textFile(INPUT_DATA_PATH + "/users.csv.gz")
-junk = users.first()
-user = users.filter(lambda x : x != junk) \
+userHeader = users.first()
+user = users.filter(lambda x : x != userHeader) \
         .map(lambda lines:lines.split("\t")) \
         .map(lambda x: (x[0],x[7],x[8])) \
         .filter(lambda x : x[0] != "-1")
@@ -212,9 +212,9 @@ print("The pearson correlation coefficient between the number of upvotes and dow
 #divided by the total number of records(or rows) in userID column
 
 comments = sc.textFile(INPUT_DATA_PATH + "/comments.csv.gz")
-junk = comments.first()
+commentHeader = comments.first()
 numRecords = comments.count()-1 #eliminate first column
-comment = comments.filter(lambda x : x != junk) \
+comment = comments.filter(lambda x : x != commentHeader) \
             .map(lambda lines:lines.split("\t")) \
             .map(lambda x : (x[4],1)) \
             .reduceByKey(lambda a,b: a+b) \
