@@ -13,6 +13,7 @@ sc.setLogLevel("ERROR")
 
 INPUT_DATA_PATH = sys.argv[1]
 
+
 ####SUBTASK 1
 #Create a graph of posts and comments. Nodes are users, and there is an edge from
 #node 𝑖 to node 𝑗 if 𝑖 wrote a comment for 𝑗’s post. Each edge has a weight 𝑤𝑖𝑗 that is
@@ -44,10 +45,14 @@ vertices = comments.filter(lambda x : x != headerComments) \
 #and answer the following subtasks using DataFrame API, namely using Spark SQL
 
 
+
 columns = ["src", "dst", "w"]
 df = edges.toDF(columns)
 df.printSchema()
 df.show(truncate=False)
+
+df.coalesce(1).write.format('com.databricks.spark.csv').option('header', 'true').save('/test.csv')
+
 
 ####SUBTASK 3
 #Find the user ids of top 10 users who wrote the most comments
