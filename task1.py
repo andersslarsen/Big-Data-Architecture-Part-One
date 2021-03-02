@@ -20,13 +20,13 @@ postsRDD = sc.textFile(INPUT_DATA_PATH + "/posts.csv.gz")
 usersRDD = sc.textFile(INPUT_DATA_PATH + "/users.csv.gz")
 
 #Calculate number of rows
-badgesRows = badgesRDD.count()
-commentsRows = commentsRdd.count() - 1
+badgesRows = badgesRDD.count() - 1
+commentsRows = commentsRDD.count() - 1
 postsRows = postsRDD.count() - 1
 usersRows = usersRDD.count() - 1
 
 
-print("The number of columns in the badges RDD: " + str(badgesRows))
-print("The number of columns in the comments RDD: " + str(commentsRows))
-print("The number of columns in the posts RDD: " + str(postsRows))
-print("The number of columns in the users RDD: " + str(usersRows))
+print("The number of rows in the badges RDD: " + str(badgesRows))
+print("The number of rows in the comments RDD: " + str(commentsRows))
+print("The number of rows in the posts RDD: " + str(postsRows))
+print("The number of rows in the users RDD: " + str(usersRows))
