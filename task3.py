@@ -1,9 +1,10 @@
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, asc, desc
 import pandas as pd
 import sys
 from graphframes import *
-#from functools import reduce
+
 
 conf = SparkConf().setAppName("project").setMaster("local[*]")
 sc = SparkContext(conf = conf)
@@ -51,4 +52,4 @@ df.show(truncate=False)
 ####SUBTASK 3
 #Find the user ids of top 10 users who wrote the most comments
 
-sortedDf = df.sort_values('2')
+df.sort(col("w").desc()).show(truncate=False)
