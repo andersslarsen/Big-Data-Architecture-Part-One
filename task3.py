@@ -1,7 +1,7 @@
 from pyspark import SparkConf, SparkContext
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, asc, desc
-import pandas as pd
+from pyspark.sql import SparkSession, SQLContext
+from pyspark.sql.functions import col, asc, desc, lit, row_number
+from pyspark.sql.window import Window
 import sys
 from graphframes import *
 
@@ -9,6 +9,7 @@ from graphframes import *
 conf = SparkConf().setAppName("project").setMaster("local[*]")
 sc = SparkContext(conf = conf)
 spark = SparkSession(sc)
+sqlContext = SQLContext(sc)
 sc.setLogLevel("ERROR")
 
 INPUT_DATA_PATH = sys.argv[1]
@@ -39,6 +40,12 @@ edges = newRDD.map(lambda x : (x[0][0], x[0][1], x[1]))
 vertices = comments.filter(lambda x : x != headerComments) \
                 .map(lambda x : x[1])
 
+# e = sqlContext.createDataFrame(edges)
+# v = sqlContext.createDataFrame((vertices,))
+#
+# g = GraphFrame(v, e)
+# print(g)
+
 ####SUBTASK 2
 #Convert the result of the previous step into a Spark DataFrame (DF)
 #and answer the following subtasks using DataFrame API, namely using Spark SQL
@@ -52,4 +59,18 @@ df.show(truncate=False)
 ####SUBTASK 3
 #Find the user ids of top 10 users who wrote the most comments
 
-df.sort(col("w").desc()).show(truncate=False)
+#create a dummy row to generate row numbers
+w = Window().partitionBy(lit('a')).orderBy(lit('a'))
+
+sortedDf = df.sort(col("w").desc())
+selectRows = sortedDf.withColumn("row_num", row_number().over(w))
+selectRows.filter(col("row_num") \
+                .between(1,10)) \
+                .select("src") \
+                .show(truncate=False)
+
+####SUBTASK 4
+#Find the display names of top 10 users who their posts received the greatest number
+#of comments. To do so, you can load users information (or table) into a DF and join the
+#DF from previous subtasks (that the DF containing the graph of posts and comments)
+#with it to produce the results

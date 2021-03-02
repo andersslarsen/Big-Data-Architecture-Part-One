@@ -170,15 +170,14 @@ def pearsonCC(List1, List2):
     yMean = mean(List2)
     xSDev = sDev(List1)
     ySDev = sDev(List2)
-    # r numerator
-    rNum = 0.0
+
+    r1 = 0.0
     for i in range(len(List1)):
-        rNum += (List1[i]-xMean)*(List2[i]-yMean)
+        r1 += (List1[i]-xMean)*(List2[i]-yMean)
 
-    # r denominator
-    rDen = xSDev * ySDev
+    r2 = xSDev * ySDev
 
-    r =  rNum/rDen
+    r =  r1/r2
     return r
 
 
