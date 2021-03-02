@@ -7,7 +7,7 @@ The code is split into three distinct .py files, one for each task. To run the s
 Example: python task2.py /user/example/data
 
 <p align="center">
-<img src="https://github.com/thomasfosen/TDT4305---Big-Data---Part-One/blob/master/figures/dataDescription.png" width="600"><br>
+<img src="https://github.com/thomasfosen/TDT4305---Big-Data---Part-One/blob/master/figures/dataDescription.PNG" width="600"><br>
 Figure 2: Data Description
 </p>
 
