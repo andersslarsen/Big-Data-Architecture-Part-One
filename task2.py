@@ -168,17 +168,17 @@ def sDev(List):
     return dev
 
 def pearsonCC(List1, List2):
-# First establish the means and standard deviations for both lists.
-    xMean = mean(List1)
-    yMean = mean(List2)
-    xSDev = sDev(List1)
-    ySDev = sDev(List2)
+
+    Mean1 = mean(List1)
+    Mean2 = mean(List2)
+    SDev1 = sDev(List1)
+    SDev2 = sDev(List2)
 
     r1 = 0.0
     for i in range(len(List1)):
-        r1 += (List1[i]-xMean)*(List2[i]-yMean)
+        r1 += (List1[i]-Mean1)*(List2[i]-Mean1)
 
-    r2 = xSDev * ySDev
+    r2 = SDev1 * SDev2
 
     r =  r1/r2
     return r

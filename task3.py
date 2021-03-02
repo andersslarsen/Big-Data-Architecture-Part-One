@@ -41,6 +41,7 @@ edges = newRDD.map(lambda x : (x[0][0], x[0][1], x[1]))
 vertices = comment.filter(lambda x : x != headerComments) \
                 .map(lambda x : x[1])
 
+#######Could not get this to work.##########
 # e = sqlContext.createDataFrame(edges)
 # v = sqlContext.createDataFrame(vertices)
 #
