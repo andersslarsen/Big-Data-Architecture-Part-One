@@ -14,13 +14,14 @@ sc.setLogLevel("ERROR")
 INPUT_DATA_PATH = sys.argv[1]
 
 
-    ###############################################################
-    #Task1 - Find the average length of the questions(posts),
-    #        answers(posts), and comments(comments) in character
-    ###############################################################
+# ##############################################################
+# Task1 - Find the average length of the questions(posts),
+#        answers(posts), and comments(comments) in character
+# ##############################################################
 comments = sc.textFile(INPUT_DATA_PATH + '/comments.csv.gz')
 posts = sc.textFile(INPUT_DATA_PATH + '/posts.csv.gz')
 numComments = comments.count()-1
+numPosts = posts.count()-1
 commentsHeader = comments.first()
 postsHeader = posts.first()
 
@@ -34,13 +35,11 @@ avgLength = commentsLength/numComments
 
 
 ################################################################
-postLength = posts.filter(lambda x : x!=postsHeader) \
+post = posts.filter(lambda x : x!=postsHeader) \
                 .map(lambda lines: lines.split("\t")) \
-                .map(lambda x : (x[1], base64.b64decode(x[5]))) \
-                .persist()
+                .map(lambda x : (x[1], base64.b64decode(x[5])))
 
-questions = postLength.filter(lambda x: (x[0] == "1", x[1])) \
-                .persist()
+questions = post.filter(lambda x: x[0] == "1")
 
 numQ = questions.count()
 
@@ -49,13 +48,13 @@ lengthQ = questions.map(lambda word: len(word[1])) \
 
 avgLengthQ = lengthQ/numQ
 ################################################################
-answers= postLength.filter(lambda x: (x[0]=="2", x[1])) \
-                .persist()
+numA= (numPosts-numQ)
 
-numA = answers.count()
-
-lengthA = answers.map(lambda word: len(word[1])) \
+lengthPost = post.map(lambda word: len(word[1])) \
                 .reduce(lambda a,b : a+b)
+
+lengthA = lengthPost-lengthQ
+
 avgLengthA = lengthA/numA
 
 print("Average character per comment: " + str(avgLength))
@@ -100,23 +99,32 @@ print("The last question was asked: " + lastQ[1] + " by the user '" + lastUser[0
 posts = sc.textFile(INPUT_DATA_PATH + "/posts.csv.gz")
 ids = posts.map(lambda lines:lines.split("\t")) \
         .map(lambda x: (x[6],x[1])) \
+        .filter(lambda x: x[0]!="NULL")
 
 
 
-A = ids.filter(lambda x: (x[0]!="-1",x[1]==2)) \
+A = ids.filter(lambda x: x[1]=="2") \
         .map(lambda user: (user[0],1)) \
         .reduceByKey(lambda a,b: a+b) \
-        .sortBy(lambda x: -x[1]) \
-        .take(5)
+        .sortBy(lambda x: -x[1])
 
-Q = ids.filter(lambda x: (x[0]!="-1",x[1]==1)) \
+answr= A.first()
+usrID1 = answr[0]
+nA = answr[1]
+
+
+Q = ids.filter(lambda x: x[1]=="1") \
         .map(lambda user: (user[0],1)) \
         .reduceByKey(lambda a,b: a+b) \
-        .sortBy(lambda x: -x[1]) \
-        .take(5)
+        .sortBy(lambda x: -x[1])
+
+qstn = Q.first()
+usrID2 = qstn[0]
+nQ = qstn[1]
+
  #top ten greatest number of Q&As
-print("This user wrote the greatest number of answers: " + str(A))
-print("This user wrote the greatest number of questions: " + str(Q))
+print("This user ID wrote the greatest number of answers(" + str(nA) + "): " + str(usrID1))
+print("This user ID wrote the greatest number of questions(" + str(nQ) + "): " + str(usrID2))
 
 ###############################################################
 #Task4 - Calculate the number of users who
@@ -145,7 +153,7 @@ def mean(List):
     tot = 0
     for i in List:
         tot += float(i)
-    mean = total/len(List)
+    mean = tot/len(List)
     return mean
 
 def sDev(List):

@@ -30,20 +30,19 @@ headerPosts = posts.first()
 comment = comments.filter(lambda x : x != headerComments) \
             .map(lambda lines : lines.split("\t")) \
             .map(lambda x : (x[0],x[4])) \
-            .persist()
 
 #x[0]: postID, x[6]: ownerUserid
 post = posts.filter(lambda x : x != headerPosts) \
             .map(lambda lines : lines.split("\t")) \
             .map(lambda x : (x[0], x[6])) \
-            .persist()
-
 
 join = comment.join(post)
 newRDD = join.map(lambda x : ((x[1]), 1)) \
             .reduceByKey(lambda a,b : a+b) \
-            .take(10)
-print(newRDD)
+
+firstEl = newRDD.first()
+firstJoin = firstEl[0]
+print(firstJoin)
 
     # columns = ["src,dst", "w"]
     # df = newRDD.toDF(columns)
