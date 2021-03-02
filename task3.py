@@ -13,7 +13,7 @@ sqlContext = SQLContext(sc)
 sc.setLogLevel("ERROR")
 
 INPUT_DATA_PATH = sys.argv[1]
-
+OUTPUT_DATA_PATH = sys.argv[2]
 
 ####SUBTASK 1
 #Create a graph of posts and comments. Nodes are users, and there is an edge from
@@ -38,11 +38,11 @@ join = comment.join(post)
 newRDD = join.map(lambda x : (x[1],1)) \
             .reduceByKey(lambda a,b : a+b)
 edges = newRDD.map(lambda x : (x[0][0], x[0][1], x[1]))
-vertices = comments.filter(lambda x : x != headerComments) \
+vertices = comment.filter(lambda x : x != headerComments) \
                 .map(lambda x : x[1])
 
 # e = sqlContext.createDataFrame(edges)
-# v = sqlContext.createDataFrame((vertices,))
+# v = sqlContext.createDataFrame(vertices)
 #
 # g = GraphFrame(v, e)
 # print(g)
@@ -51,20 +51,18 @@ vertices = comments.filter(lambda x : x != headerComments) \
 #Convert the result of the previous step into a Spark DataFrame (DF)
 #and answer the following subtasks using DataFrame API, namely using Spark SQL
 
-
-
 columns = ["src", "dst", "w"]
 df = edges.toDF(columns)
 df.printSchema()
 df.show(truncate=False)
-
-df.coalesce(1).write.format('com.databricks.spark.csv').option('header', 'true').save('/test.csv')
 
 
 ####SUBTASK 3
 #Find the user ids of top 10 users who wrote the most comments
 
 #create a dummy row to generate row numbers
+
+print("User ids of top 10 users who wrote the most comments: ")
 w = Window().partitionBy(lit('a')).orderBy(lit('a'))
 
 sortedDf = df.sort(col("w").desc())
@@ -79,3 +77,8 @@ selectRows.filter(col("row_num") \
 #of comments. To do so, you can load users information (or table) into a DF and join the
 #DF from previous subtasks (that the DF containing the graph of posts and comments)
 #with it to produce the results
+
+
+
+####SUBTASK 5
+df.coalesce(1).write.format('com.databricks.spark.csv').option('header', 'true').save(OUTPUT_DATA_PATH + '/output.csv')

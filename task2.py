@@ -57,9 +57,10 @@ lengthA = lengthPost-lengthQ
 
 avgLengthA = lengthA/numA
 
+print("\nTask 2.1\n")
 print("Average character per comment: " + str(avgLength))
 print("Average character per question: " + str(avgLengthQ))
-print("Average character per answer: " + str(avgLengthA))
+print("Average character per answer: " + str(avgLengthA)+ "\n")
 
 
 
@@ -88,8 +89,9 @@ firstUser = userName.filter(lambda id: id[0]==userFirst) \
 lastUser = userName.filter(lambda id: id[0]==userLast) \
             .map(lambda x:x[1]).collect()
 
+print("Task 2.2\n")
 print("The first question was asked: " + firstQ[1] + " by the user '" + firstUser[0] + "'")
-print("The last question was asked: " + lastQ[1] + " by the user '" + lastUser[0] + "'")
+print("The last question was asked: " + lastQ[1] + " by the user '" + lastUser[0] + "'\n")
 
 
 ###############################################################
@@ -122,9 +124,9 @@ qstn = Q.first()
 usrID2 = qstn[0]
 nQ = qstn[1]
 
- #top ten greatest number of Q&As
+print("Task 2.3\n")
 print("This user ID wrote the greatest number of answers(" + str(nA) + "): " + str(usrID1))
-print("This user ID wrote the greatest number of questions(" + str(nQ) + "): " + str(usrID2))
+print("This user ID wrote the greatest number of questions(" + str(nQ) + "): " + str(usrID2) + "\n")
 
 ###############################################################
 #Task4 - Calculate the number of users who
@@ -145,7 +147,8 @@ usersWithBadge = numUsersBadge.distinct() \
                     .count()
 
 totUserCount = (numUsers - usersWithBadge) + lessThanThree
-print("Number of users who received less than three badges: " + str(totUserCount))
+print("Task 2.4\n")
+print("Number of users who received less than three badges: " + str(totUserCount) + "\n")
 
 #################### Functions for TASK 5 ########################
 # Rewrite!!
@@ -197,7 +200,8 @@ downVotes = user.map(lambda x: int(x[2])).collect()
 
 corr = pearsonCC(upVotes, downVotes)
 
-print("The pearson correlation coefficient between the number of upvotes and downvotes cast by a user: " + str(corr))
+print("Task 2.5\n")
+print("The pearson correlation coefficient between the number of upvotes and downvotes cast by a user: " + str(corr) + "\n")
 
 
 
@@ -230,4 +234,5 @@ def entropy(someList):
 
 newList = [element[1] for element in comment]
 ent = entropy(newList)
-print("The entropy of the userIDs who wrote one or more comments: " + str(ent))
+print("Task 2.6\n")
+print("The entropy of the userIDs who wrote one or more comments: " + str(ent) + "\n")
