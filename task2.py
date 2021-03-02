@@ -151,7 +151,7 @@ print("Task 2.4\n")
 print("Number of users who received less than three badges: " + str(totUserCount) + "\n")
 
 #################### Functions for TASK 5 ########################
-# Rewrite!!
+
 def mean(List):
     tot = 0
     for i in List:
