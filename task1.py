@@ -19,8 +19,8 @@ commentsRDD = sc.textFile(INPUT_DATA_PATH + "/comments.csv.gz")
 postsRDD = sc.textFile(INPUT_DATA_PATH + "/posts.csv.gz")
 usersRDD = sc.textFile(INPUT_DATA_PATH + "/users.csv.gz")
 
-
-badgesRows = badgesRDD.count()-1
+#Calculate number of rows
+badgesRows = badgesRDD.count()
 commentsRows = commentsRdd.count() - 1
 postsRows = postsRDD.count() - 1
 usersRows = usersRDD.count() - 1
