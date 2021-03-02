@@ -227,8 +227,8 @@ comment = comments.filter(lambda x : x != commentHeader) \
 
 def entropy(someList):
     s=0
-    for p in someList:
-        r = p/numRecords
+    for i in someList:
+        r = i/numRecords
         s += -r*(np.log(r))
     return s/np.log(2)
 

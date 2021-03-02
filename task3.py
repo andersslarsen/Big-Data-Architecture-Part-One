@@ -13,7 +13,7 @@ sqlContext = SQLContext(sc)
 sc.setLogLevel("ERROR")
 
 INPUT_DATA_PATH = sys.argv[1]
-#OUTPUT_DATA_PATH = sys.argv[2]
+OUTPUT_DATA_PATH = sys.argv[2]
 
 ####SUBTASK 1
 #Create a graph of posts and comments. Nodes are users, and there is an edge from
@@ -78,19 +78,17 @@ selectRows.filter(col("row_num") \
 #DF from previous subtasks (that the DF containing the graph of posts and comments)
 #with it to produce the results
 
-userDf = spark.read.options(header ='True', inferSchema='True', delimiter='\t') \
-        .csv(INPUT_DATA_PATH + "/users.csv.gz")
+print("These are the display names of the top 10 users who received the greatest number of comments:\n")
 
-leftJoin = selectRows.join(userDf, df.dst == userDf.Id, 'inner') \
-                .filter(col("row_num")) \
-                .between(1,10) \
-                .select("dst") \
+userDf = spark.read.options(header ='True', inferSchema='True', delimiter='\t') \
+        .csv(INPUT_DATA_PATH + "/users.csv.gz") \
+        .select("DisplayName", "Id")
+
+leftJoin = selectRows.join(userDf, selectRows.dst == userDf.Id, 'inner') \
+                .filter(col("row_num") \
+                .between(1,10)) \
+                .select("DisplayName") \
                 .show(truncate=False)
 
-
-# df.alias('a').join(userDf.alias('b'),col('dst') == col('Id')) \
-#          .select([col('a.'+xx) for xx in a.columns] + [col('DisplayName')]) \
-#          .show(truncate=False)
-
 ####SUBTASK 5
-#df.coalesce(1).write.format('com.databricks.spark.csv').option('header', 'true').save(OUTPUT_DATA_PATH + '/output.csv')
+df.coalesce(1).write.format('com.databricks.spark.csv').option('header', 'true').save(OUTPUT_DATA_PATH + '/output.csv')
