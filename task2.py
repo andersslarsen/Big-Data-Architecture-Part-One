@@ -99,14 +99,24 @@ print("The last question was asked: " + lastQ[1] + " by the user '" + lastUser[0
 ###############################################################
 posts = sc.textFile(INPUT_DATA_PATH + "/posts.csv.gz")
 ids = posts.map(lambda lines:lines.split("\t")) \
-        .map(lambda x: x[6]) \
-        .filter(lambda x: x!="-1") \
-        .map(lambda user: (user,1)) \
+        .map(lambda x: (x[6],x[1])) \
+
+
+
+A = ids.filter(lambda x: (x[0]!="-1",x[1]==2)) \
+        .map(lambda user: (user[0],1)) \
         .reduceByKey(lambda a,b: a+b) \
         .sortBy(lambda x: -x[1]) \
-        .take(10) #top ten greatest number of Q&As
-print("This user wrote the greatest number of answers: " + str(ids))
-print("This user wrote the greatest number of questions: " + str(ids))
+        .take(5)
+
+Q = ids.filter(lambda x: (x[0]!="-1",x[1]==1)) \
+        .map(lambda user: (user[0],1)) \
+        .reduceByKey(lambda a,b: a+b) \
+        .sortBy(lambda x: -x[1]) \
+        .take(5)
+ #top ten greatest number of Q&As
+print("This user wrote the greatest number of answers: " + str(A))
+print("This user wrote the greatest number of questions: " + str(Q))
 
 ###############################################################
 #Task4 - Calculate the number of users who
@@ -132,9 +142,9 @@ print("Number of users who received less than three badges: " + str(totUserCount
 #################### Functions for TASK 5 ########################
 # Rewrite!!
 def mean(List):
-    total = 0
-    for a in List:
-        total += float(a)
+    tot = 0
+    for i in List:
+        tot += float(i)
     mean = total/len(List)
     return mean
 
@@ -205,11 +215,11 @@ comment = comments.filter(lambda x : x != junk) \
 
 
 def entropy(someList):
-    su=0
+    s=0
     for p in someList:
         r = p/numRecords
-        su += -r*(np.log(r))
-    return su/np.log(2)
+        s += -r*(np.log(r))
+    return s/np.log(2)
 
 newList = [element[1] for element in comment]
 ent = entropy(newList)

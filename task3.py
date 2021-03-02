@@ -22,8 +22,8 @@ INPUT_DATA_PATH = sys.argv[1]
 #1: nodes(userID, postID)
 #2: edges(sourceID(userID), destinationID(userID), postID, weight(number of comments))
 
-comments = sc.textFile("projectData/comments.csv.gz")
-posts = sc.textFile("projectData/posts.csv.gz")
+comments = sc.textFile(INPUT_DATA_PATH + "/comments.csv.gz")
+posts = sc.textFile(INPUT_DATA_PATH + "/posts.csv.gz")
 headerComments = comments.first()
 headerPosts = posts.first()
 #x[0]: postid of which the comment is written for, x[4]: userid of the one commenting
